@@ -124,29 +124,4 @@ else:
 
 print('time:', end - start)
 
-# n = 20
-#
-# t1 = 0
-# t2 = 0
-#
-# state = initialize_state()
-#
-# print('Init state: ', state)
-# for i in range(n):
-#     start = time.perf_counter()
-#     result = ids(state)
-#     end = time.perf_counter()
-#     t1 += end - start
-#     # print(result)
-# print('IDS:', t1/n)
-#
-# for i in range(n):
-#     start = time.perf_counter()
-#     result = astar(state)
-#     end = time.perf_counter()
-#     t2 += end - start
-#     # print(result)
 
-
-
-# print('A*:', t2/n)
