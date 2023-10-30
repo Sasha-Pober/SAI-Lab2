@@ -1,20 +1,23 @@
-from queue import PriorityQueue
 import random
 import time
+import psutil
 
 N = 8
 
+generated_nodes_ids = 0
+generated_nodes_astar = 0
+
 #goal = [1,3,5,7,2,0,6,4]
 
-init_state = [7,3,5,7,2,7,6,4]
+init_state = [5,3,5,7,2,1,6,4]
 
 list = [0] * N
 
 def initialize_state():
-    # return init_state
-    for i in range(N):
-        list[i] = random.randint(0,N-1)
-    return list
+    return init_state
+    # for i in range(N):
+    #     list[i] = random.randint(0,N-1)
+    # return list
 
 def is_goal(board):
     # Перевірка, чи досягнуто цільового стану
@@ -41,7 +44,10 @@ def dfs(board, depth):
             return board
         return None
 
-    for successor in successors(board):
+    global generated_nodes_ids
+    successors_states = successors(board)
+    generated_nodes_ids += len(successors_states)
+    for successor in successors_states:
         result = dfs(successor, depth - 1)
         if result is not None:
             return result
@@ -61,6 +67,7 @@ def successors(board):
             new_board[i], new_board[j] = new_board[j], new_board[i]
             successors.append(new_board)
 
+    # print(len(successors))
     return successors
 
 
@@ -91,21 +98,24 @@ def astar(initial_state):
             return state
 
         explored.add(tuple(state))
+        global generated_nodes_astar
         successors_states = successors(state)
-        # print(len(successors_states))
-
+        generated_nodes_astar += len(successors_states)
         for s in successors_states:
             if tuple(s) not in explored:
                 frontier.append((heuristic(s) + len(explored), s))
 
+
     return None
 
-# print(initialize_state(init_state))
+
 state = initialize_state()
 print('Початкові значення:', state)
 
 start = time.perf_counter()
+memory_before = psutil.virtual_memory().used /(1024)
 result = ids(state)
+memory_after = psutil.virtual_memory().used /(1024)
 end = time.perf_counter()
 if result is not None:
     print("Розв'язок знайдено:", result)
@@ -113,9 +123,13 @@ else:
     print("Розв'язок не знайдено.")
 
 print('time:', end - start)
+print('States generated:', generated_nodes_ids)
+print(f'Memory used: {memory_after - memory_before} KB')
 
 start = time.perf_counter()
+memory_before = psutil.virtual_memory().used /(1024*1024)
 result = astar(state)
+memory_after = psutil.virtual_memory().used /(1024*1024)
 end = time.perf_counter()
 if result is not None:
     print("Розв'язок знайдено:", result)
@@ -123,5 +137,10 @@ else:
     print("Розв'язок не знайдено.")
 
 print('time:', end - start)
+print('States generated:', generated_nodes_astar)
+print(f'Memory used: {memory_after - memory_before} KB')
+
+
+
 
 
