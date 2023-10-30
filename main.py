@@ -112,6 +112,7 @@ def astar(initial_state):
 state = initialize_state()
 print('Початкові значення:', state)
 
+print('IDS algorithm:')
 start = time.perf_counter()
 memory_before = psutil.virtual_memory().used /(1024)
 result = ids(state)
@@ -124,8 +125,9 @@ else:
 
 print('time:', end - start)
 print('States generated:', generated_nodes_ids)
-print(f'Memory used: {memory_after - memory_before} KB')
+print(f'Memory used: {abs(memory_after - memory_before)} KB')
 
+print('\nA* algorithm:')
 start = time.perf_counter()
 memory_before = psutil.virtual_memory().used /(1024*1024)
 result = astar(state)
@@ -138,7 +140,7 @@ else:
 
 print('time:', end - start)
 print('States generated:', generated_nodes_astar)
-print(f'Memory used: {memory_after - memory_before} KB')
+print(f'Memory used: {abs(memory_after - memory_before)} KB')
 
 
 
